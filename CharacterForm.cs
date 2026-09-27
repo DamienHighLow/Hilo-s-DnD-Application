@@ -28,25 +28,25 @@ namespace DnDApplication
         private int martialMeleeIdx = 56;
         private int martialRangedIdx = 61;
 
-        private void StrengthNumericBox_ValueChanged(object sender, EventArgs e)
+        private void BaseStatChanged(NumericUpDown statObj, NumericUpDown savingThrowObj, Label statLabel, decimal prevNum)
         {
-            decimal num = StrengthNumericBox.Value;
+            decimal num = statObj.Value;
             int mod = (int)Math.Floor((num - 10) / 2);
 
             if (mod < 0)
             {
                 // Removes plus sign for negative numbers and zero.
-                StrengthModLabel.Text = $"({mod.ToString()})";
+                statLabel.Text = $"({mod.ToString()})";
             }
             else
             {
                 // Displays positive stat modifiers with a plus sign.
-                StrengthModLabel.Text = $"(+{mod.ToString()})";
+                statLabel.Text = $"(+{mod.ToString()})";
             }
 
             // Adds the stat's difference to the saving throw stats.
             decimal newSave;
-            if (prevStr == 0)
+            if (prevNum == 0)
             {
                 // Previous STR stat wasn't initalized so it subtracts the base stat (8) from the current stat value.
                 newSave = num - 8;
@@ -54,363 +54,100 @@ namespace DnDApplication
             else
             {
                 // Substracts the previous STR stat from the current stat value.
-                newSave = num - prevStr;
+                newSave = num - prevNum;
             }
 
             // Valids the saving throw's value.
-            if (StrengthSaveNumericBox.Value + newSave >= 8 && StrengthSaveNumericBox.Value + newSave <= 30)
+            if (statObj.Value + newSave >= 8 && savingThrowObj.Value + newSave <= 30)
             {
                 // Adds/subtracts to the stat's difference to the saving throw.
-                StrengthSaveNumericBox.Value += newSave;
+                savingThrowObj.Value += newSave;
             }
-            else if (StrengthSaveNumericBox.Value + newSave < 8)
+            else if (savingThrowObj.Value + newSave < 8)
             {
                 // If the new saving throw stat value is too small, it defaults to 8.
-                StrengthSaveNumericBox.Value = 8;
+                savingThrowObj.Value = 8;
             }
-            else if (StrengthSaveNumericBox.Value + newSave > 30)
+            else if (savingThrowObj.Value + newSave > 30)
             {
                 // If the new saving throw stat value is too big, it defaults to 30.
-                StrengthSaveNumericBox.Value = 30;
+                savingThrowObj.Value = 30;
             }
+        }
+        
+        private void SavingThrowChanged(NumericUpDown savingThrowObj, Label statLabel) {
+            decimal num = (decimal)savingThrowObj.Value;
+            int mod = (int)Math.Floor((num - 10) / 2);
 
-            prevStr = num;
+            if (mod < 0)
+            {
+                statLabel.Text = $"({mod.ToString()})";
+            }
+            else
+            {
+                statLabel.Text = $"(+{mod.ToString()})";
+            }
         }
 
+        private void StrengthNumericBox_ValueChanged(object sender, EventArgs e)
+        {
+            BaseStatChanged(StrengthNumericBox, StrengthSaveNumericBox, StrengthModLabel, prevStr);
+            prevStr = StrengthNumericBox.Value;
+        }
         private void DexterityNumericBox_ValueChanged(object sender, EventArgs e)
         {
-            decimal num = (decimal)DexterityNumericBox.Value;
-            int mod = (int)Math.Floor((num - 10) / 2);
-
-            if (mod < 0)
-            {
-                DexterityModLabel.Text = $"({mod.ToString()})";
-            }
-            else
-            {
-                DexterityModLabel.Text = $"(+{mod.ToString()})";
-            }
-
-            // Adds onto the player's AC and Initiative based on their DEX stat
-            ArmorClassNumericBox.Value = mod + 10;
-
-            if (mod > 0)
-            {
-                InitiativeNumericBox.Value = mod;
-            }
-            else
-            {
-                InitiativeNumericBox.Value = 0;
-            }
-            // Adds the stat's difference to the saving throw stats.
-            decimal newSave;
-            if (prevDex == 0)
-            {
-                // Previous STR stat wasn't initalized so it subtracts the base stat (8) from the current stat value.
-                newSave = num - 8;
-            }
-            else
-            {
-                // Substracts the previous STR stat from the current stat value.
-                newSave = num - prevDex;
-            }
-
-            // Validates the saving throw's value.
-            if (DexteritySaveNumericBox.Value + newSave >= 8 && DexteritySaveNumericBox.Value + newSave <= 30)
-            {
-                // Adds/subtracts to the stat's difference to the saving throw.
-                DexteritySaveNumericBox.Value += newSave;
-            }
-            else if (DexteritySaveNumericBox.Value + newSave < 8)
-            {
-                // If the new saving throw stat value is too small, it defaults to 8.
-                DexteritySaveNumericBox.Value = 8;
-            }
-            else if (DexteritySaveNumericBox.Value + newSave > 30)
-            {
-                // If the new saving throw stat value is too big, it defaults to 30.
-                DexteritySaveNumericBox.Value = 30;
-            }
-
-            prevDex = num;
+            BaseStatChanged(DexterityNumericBox, DexteritySaveNumericBox, DexterityModLabel, prevDex);
+            prevDex = DexterityNumericBox.Value;
         }
-
         private void ConstitutionNumericBox_ValueChanged(object sender, EventArgs e)
         {
-            decimal num = (decimal)ConstitutionNumericBox.Value;
-            int mod = (int)Math.Floor((num - 10) / 2);
-
-            if (mod < 0)
-            {
-                ConstitutionModLabel.Text = $"({mod.ToString()})";
-            }
-            else
-            {
-                ConstitutionModLabel.Text = $"(+{mod.ToString()})";
-            }
-
-            // Adds the stat's difference to the saving throw stats.
-            decimal newSave;
-            if (prevCon == 0)
-            {
-                // Previous CON stat wasn't initalized so it subtracts the base stat (8) from the current stat value.
-                newSave = num - 8;
-            }
-            else
-            {
-                // Substracts the previous CON stat from the current stat value.
-                newSave = num - prevCon;
-            }
-
-            // Valids the saving throw's value.
-            if (ConstitutionSaveNumericBox.Value + newSave >= 8 && ConstitutionSaveNumericBox.Value + newSave <= 30)
-            {
-                // Adds/subtracts to the stat's difference to the saving throw.
-                ConstitutionSaveNumericBox.Value += newSave;
-            }
-            else if (ConstitutionSaveNumericBox.Value + newSave < 8)
-            {
-                // If the new saving throw stat value is too small, it defaults to 8.
-                ConstitutionSaveNumericBox.Value = 8;
-            }
-            else if (ConstitutionSaveNumericBox.Value + newSave > 30)
-            {
-                // If the new saving throw stat value is too big, it defaults to 30.
-                ConstitutionSaveNumericBox.Value = 30;
-            }
-
-            prevCon = num;
+            BaseStatChanged(ConstitutionNumericBox, ConstitutionSaveNumericBox, ConstitutionModLabel, prevCon);
+            prevCon = ConstitutionNumericBox.Value;
         }
-
         private void IntelligenceNumericBox_ValueChanged(object sender, EventArgs e)
         {
-            decimal num = (decimal)IntelligenceNumericBox.Value;
-            int mod = (int)Math.Floor((num - 10) / 2);
-
-            if (mod < 0)
-            {
-                IntelligenceModLabel.Text = $"({mod.ToString()})";
-            }
-            else
-            {
-                IntelligenceModLabel.Text = $"(+{mod.ToString()})";
-            }
-
-            // Adds the stat's difference to the saving throw stats.
-            decimal newSave;
-            if (prevInt == 0)
-            {
-                // Previous STR stat wasn't initalized so it subtracts the base stat (8) from the current stat value.
-                newSave = num - 8;
-            }
-            else
-            {
-                // Substracts the previous STR stat from the current stat value.
-                newSave = num - prevInt;
-            }
-
-            // Valids the saving throw's value.
-            if (IntelligenceSaveNumericBox.Value + newSave >= 8 && IntelligenceSaveNumericBox.Value + newSave <= 30)
-            {
-                // Adds/subtracts to the stat's difference to the saving throw.
-                IntelligenceSaveNumericBox.Value += newSave;
-            }
-            else if (IntelligenceSaveNumericBox.Value + newSave < 8)
-            {
-                // If the new saving throw stat value is too small, it defaults to 8.
-                IntelligenceSaveNumericBox.Value = 8;
-            }
-            else if (IntelligenceSaveNumericBox.Value + newSave > 30)
-            {
-                // If the new saving throw stat value is too big, it defaults to 30.
-                IntelligenceSaveNumericBox.Value = 30;
-            }
-            prevInt = num;
+            BaseStatChanged(IntelligenceNumericBox, IntelligenceSaveNumericBox, IntelligenceModLabel, prevInt);
+            prevInt = IntelligenceNumericBox.Value;
         }
-
         private void WisdomNumericBox_ValueChanged(object sender, EventArgs e)
         {
-            decimal num = (decimal)WisdomNumericBox.Value;
-            int mod = (int)Math.Floor((num - 10) / 2);
-
-            if (mod < 0)
-            {
-                WisdomModLabel.Text = $"({mod.ToString()})";
-            }
-            else
-            {
-                WisdomModLabel.Text = $"(+{mod.ToString()})";
-            }
-
-            // Adds onto the player's perception based on their WIS stat
-            PerceptionNumericBox.Value = 10 + mod;
-
-            // Adds the stat's difference to the saving throw stats.
-            decimal newSave;
-            if (prevWis == 0)
-            {
-                // Previous STR stat wasn't initalized so it subtracts the base stat (8) from the current stat value.
-                newSave = num - 8;
-            }
-            else
-            {
-                // Substracts the previous STR stat from the current stat value.
-                newSave = num - prevWis;
-            }
-
-            // Valids the saving throw's value.
-            if (WisdomSaveNumericBox.Value + newSave >= 8 && WisdomSaveNumericBox.Value + newSave <= 30)
-            {
-                // Adds/subtracts to the stat's difference to the saving throw.
-                WisdomSaveNumericBox.Value += newSave;
-            }
-            else if (WisdomSaveNumericBox.Value + newSave < 8)
-            {
-                // If the new saving throw stat value is too small, it defaults to 8.
-                WisdomSaveNumericBox.Value = 8;
-            }
-            else if (WisdomSaveNumericBox.Value + newSave > 30)
-            {
-                // If the new saving throw stat value is too big, it defaults to 30.
-                WisdomSaveNumericBox.Value = 30;
-            }
-            prevWis = num;
+            BaseStatChanged(WisdomNumericBox, WisdomSaveNumericBox, WisdomModLabel, prevWis);
+            prevWis = WisdomNumericBox.Value;
         }
-
         private void CharismaNumericBox_ValueChanged(object sender, EventArgs e)
         {
-            decimal num = (decimal)CharismaNumericBox.Value;
-            int mod = (int)Math.Floor((num - 10) / 2);
-
-            if (mod < 0)
-            {
-                CharismaModLabel.Text = $"({mod.ToString()})";
-            }
-            else
-            {
-                CharismaModLabel.Text = $"(+{mod.ToString()})";
-            }
-
-            // Adds the stat's difference to the saving throw stats.
-            decimal newSave;
-            if (prevCha == 0)
-            {
-                // Previous STR stat wasn't initalized so it subtracts the base stat (8) from the current stat value.
-                newSave = num - 8;
-            }
-            else
-            {
-                // Substracts the previous STR stat from the current stat value.
-                newSave = num - prevCha;
-            }
-
-            // Valids the saving throw's value.
-            if (CharismaSaveNumericBox.Value + newSave >= 8 && CharismaSaveNumericBox.Value + newSave <= 30)
-            {
-                // Adds/subtracts to the stat's difference to the saving throw.
-                CharismaSaveNumericBox.Value += newSave;
-            }
-            else if (CharismaSaveNumericBox.Value + newSave < 8)
-            {
-                // If the new saving throw stat value is too small, it defaults to 8.
-                CharismaSaveNumericBox.Value = 8;
-            }
-            else if (CharismaSaveNumericBox.Value + newSave > 30)
-            {
-                // If the new saving throw stat value is too big, it defaults to 30.
-                CharismaSaveNumericBox.Value = 30;
-            }
-            prevCha = num;
+            BaseStatChanged(CharismaNumericBox, CharismaSaveNumericBox, CharismaModLabel, prevCha);
+            prevCha = CharismaNumericBox.Value;
         }
 
         private void StrengthSaveNumericBox_ValueChanged(object sender, EventArgs e)
         {
-            decimal num = (decimal)StrengthSaveNumericBox.Value;
-            int mod = (int)Math.Floor((num - 10) / 2);
-
-            if (mod < 0)
-            {
-                StrengthSaveModLabel.Text = $"({mod.ToString()})";
-            }
-            else
-            {
-                StrengthSaveModLabel.Text = $"(+{mod.ToString()})";
-            }
+            SavingThrowChanged(StrengthSaveNumericBox, StrengthSaveModLabel);
         }
-
         private void DexteritySaveNumericBox_ValueChanged(object sender, EventArgs e)
         {
-            decimal num = (decimal)DexteritySaveNumericBox.Value;
-            int mod = (int)Math.Floor((num - 10) / 2);
+            SavingThrowChanged(DexteritySaveNumericBox, DexteritySaveModLabel);
 
-            if (mod < 0)
-            {
-                DexteritySaveModLabel.Text = $"({mod.ToString()})";
-            }
-            else
-            {
-                DexteritySaveModLabel.Text = $"(+{mod.ToString()})";
-            }
         }
-
         private void ConstitutionSaveNumericBox_ValueChanged(object sender, EventArgs e)
         {
-            decimal num = (decimal)ConstitutionSaveNumericBox.Value;
-            int mod = (int)Math.Floor((num - 10) / 2);
+            SavingThrowChanged(ConstitutionSaveNumericBox, ConstitutionSaveModLabel);
 
-            if (mod < 0)
-            {
-                ConstitutionSaveModLabel.Text = $"({mod.ToString()})";
-            }
-            else
-            {
-                ConstitutionSaveModLabel.Text = $"(+{mod.ToString()})";
-            }
         }
-
         private void IntelligenceSaveNumericBox_ValueChanged(object sender, EventArgs e)
         {
-            decimal num = (decimal)IntelligenceSaveNumericBox.Value;
-            int mod = (int)Math.Floor((num - 10) / 2);
+            SavingThrowChanged(IntelligenceSaveNumericBox, IntelligenceSaveModLabel);
 
-            if (mod < 0)
-            {
-                IntelligenceSaveModLabel.Text = $"({mod.ToString()})";
-            }
-            else
-            {
-                IntelligenceSaveModLabel.Text = $"(+{mod.ToString()})";
-            }
         }
-
         private void WisdomSaveNumericBox_ValueChanged(object sender, EventArgs e)
         {
-            decimal num = (decimal)WisdomSaveNumericBox.Value;
-            int mod = (int)Math.Floor((num - 10) / 2);
+            SavingThrowChanged(WisdomSaveNumericBox, WisdomSaveModLabel);
 
-            if (mod < 0)
-            {
-                WisdomSaveModLabel.Text = $"({mod.ToString()})";
-            }
-            else
-            {
-                WisdomSaveModLabel.Text = $"(+{mod.ToString()})";
-            }
         }
-
         private void CharismaSaveNumericBox_ValueChanged(object sender, EventArgs e)
         {
-            decimal num = (decimal)CharismaSaveNumericBox.Value;
-            int mod = (int)Math.Floor((num - 10) / 2);
+            SavingThrowChanged(CharismaSaveNumericBox, CharismaSaveModLabel);
 
-            if (mod < 0)
-            {
-                CharismaSaveModLabel.Text = $"({mod.ToString()})";
-            }
-            else
-            {
-                CharismaSaveModLabel.Text = $"(+{mod.ToString()})";
-            }
         }
 
         private void UnlockPerceptionCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -480,8 +217,11 @@ namespace DnDApplication
         {
             int idx = ImmunitiesListBox.SelectedIndex;
 
-            VulnerabilitiesListBox.SetItemChecked(idx, false);
-            ResistancesListBox.SetItemChecked(idx, false);
+            if (idx < VulnerabilitiesListBox.Items.Count)
+            {
+                VulnerabilitiesListBox.SetItemChecked(idx, false);
+                ResistancesListBox.SetItemChecked(idx, false);
+            }
         }
 
         private void ResetButton_Click(object sender, EventArgs e)
@@ -597,7 +337,6 @@ namespace DnDApplication
                 { "truesight",(int)TrueSightNumericBox.Value}
             };
 
-
             try
             {
                 // Adds the user's magic to the magic list
@@ -712,8 +451,6 @@ namespace DnDApplication
                 var character = new Character(stats, magic, race, spellMod, armorClass, maxHp, 0, professions, proficiencies, languages, immunities, resistances, vulnerabilites);
 
                 SaveCharacterSheet(character);
-
-                MessageBox.Show("Successfully created character sheet!");
             }
             catch (Exception ex)
             {
@@ -724,28 +461,44 @@ namespace DnDApplication
 
         private void SaveCharacterSheet(Character character)
         {
+            // Gets the charactersheet directory
             var characterSheetPath = Path.Combine(Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName, "./CharacterSheets");
 
+            // Checks if the charactersheet directory exists. Creates the directory if it doesn't exist already.
             if (!Directory.Exists(characterSheetPath))
             {
                 Directory.CreateDirectory(characterSheetPath);
             }
 
+            // Ensures a name was inputted into the name textbox
             if (NameTextBox.Text.Length != 0)
             {
+                // Ensures the name only contains letters and digits to prevent issues when saving the character sheet.
                 if (NameTextBox.Text.All(char.IsLetterOrDigit))
                 {
                     // Gets the path of the character sheet and 
                     var filePath = Path.Combine(characterSheetPath, NameTextBox.Text + ".txt");
 
-                    //if (File.Exists(filePath)) {
-                        
-                    //}
+                    // If the file exists
+                    if (File.Exists(filePath))
+                    {
+                        // Prompts the user if they'd like to override the file.
+                        var overrideFile = MessageBox.Show("The character sheet \"" + NameTextBox.Text + "\" already exists. Would you like to override the character sheet?", "Are you sure?", MessageBoxButtons.YesNoCancel);
 
+                        // Stops the file being replaced
+                        if (overrideFile == DialogResult.No)
+                        {
+                            return;
+                        }
+                    }
+
+                    // Writes the character sheet into a json file
                     var options = new JsonSerializerOptions { WriteIndented = true };
                     var jsonString = JsonSerializer.Serialize(character, options);
-
                     File.WriteAllText(filePath, jsonString);
+
+                    // Prompts the user the character sheet was successfully created!
+                    MessageBox.Show("Successfully created character sheet!");
                 }
                 else
                 {
@@ -761,7 +514,7 @@ namespace DnDApplication
         private void CharacterForm_Load(object sender, EventArgs e)
         {
             // Ensures all objects are loaded with default values selected
-            ResetButton_Click(sender,e);
+            ResetButton_Click(sender, e);
         }
     }
 }
