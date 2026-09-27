@@ -4,33 +4,33 @@ using System.Text;
 
 namespace DnDApplication.Classes
 {
-    internal class StatSheet
+    public class StatSheet
     {
-        private int strength { get; set; }
-        private int dexterity { get; set; }
-        private int constitution { get; set; }
-        private int intelligence { get; set; }
-        private int wisdom { get; set; }
-        private int charisma { get; set; }
-        private int strengthSave { get; set; }
-        private int dexteritySave { get; set; }
-        private int constitutionSave { get; set; }
-        private int intelligenceSave { get; set; }
-        private int wisdomSave { get; set; }
-        private int charismaSave { get; set; }
-        private int maxHp { get; set; }
-        private int proficiencyBonus { get; set; }
-        private int initiative { get; set; }
-        private int perception { get; set; }
-        private int walkSpeed { get; set; }
-        private int swimSpeed { get; set; }
-        private int burrowSpeed { get; set; }
-        private int climbSpeed { get; set; }
-        private int flySpeed { get; set; }
-        private int blindsight { get; set; }
-        private int darkvision { get; set; }
-        private int tremorsense { get; set; }
-        private int truesight { get; set; }
+        public int strength { get; set; }
+        public int dexterity { get; set; }
+        public int constitution { get; set; }
+        public int intelligence { get; set; }
+        public int wisdom { get; set; }
+        public int charisma { get; set; }
+        public int strengthSave { get; set; }
+        public int dexteritySave { get; set; }
+        public int constitutionSave { get; set; }
+        public int intelligenceSave { get; set; }
+        public int wisdomSave { get; set; }
+        public int charismaSave { get; set; }
+        public int maxHp { get; set; }
+        public int proficiencyBonus { get; set; }
+        public int initiative { get; set; }
+        public int perception { get; set; }
+        public int walkSpeed { get; set; }
+        public int swimSpeed { get; set; }
+        public int burrowSpeed { get; set; }
+        public int climbSpeed { get; set; }
+        public int flySpeed { get; set; }
+        public int blindsight { get; set; }
+        public int darkvision { get; set; }
+        public int tremorsense { get; set; }
+        public int truesight { get; set; }
 
         // Basic Stats oOnly 
         public StatSheet(int strength, int dexterity, int constitution, int intelligence, int wisdom, int charisma)

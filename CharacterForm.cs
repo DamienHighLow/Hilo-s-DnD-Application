@@ -13,13 +13,6 @@ namespace DnDApplication
 
         }
 
-        public CharacterForm(Character newCharacter)
-        {
-            InitializeComponent();
-            this.newCharacter = newCharacter;
-        }
-
-        private Character newCharacter;
         private TrainingTimes trainingTimes = new TrainingTimes();
 
         private decimal prevStr = 0;
@@ -598,8 +591,8 @@ namespace DnDApplication
                 { "burrowSpeed",(int)BurrowSpeedNumericBox.Value},
                 { "climbSpeed",(int)ClimbSpeedNumericBox.Value},
                 { "flySpeed",(int)FlySpeedNumericBox.Value},
-                { "blindsight",(int)DarkVisionNumericBox.Value},
-                { "darkvision",(int)BlindSightNumericBox.Value},
+                { "blindsight",(int)BlindSightNumericBox.Value},
+                { "darkvision",(int)DarkVisionNumericBox.Value},
                 { "tremorsense",(int)TremorSenseNumericBox.Value},
                 { "truesight",(int)TrueSightNumericBox.Value}
             };
@@ -610,8 +603,8 @@ namespace DnDApplication
                 // Adds the user's magic to the magic list
                 if (PrimaryMagicComboBox.SelectedIndex >= 0)
                 {
-                    MessageBox.Show(PrimaryMagicComboBox.SelectedItem.ToString());
                     magic.Add(PrimaryMagicComboBox.SelectedItem.ToString());
+
                     if (SecondaryMagicComboBox.SelectedIndex >= 0)
                     {
                         magic.Add(SecondaryMagicComboBox.SelectedItem.ToString());
@@ -716,9 +709,9 @@ namespace DnDApplication
                 }
 
                 // creates a character object and asks where the user wants to save the data.
-                Character newCharacter = new Character(stats, magic, race, spellMod, armorClass, maxHp, 0, professions, proficiencies, languages, immunities, resistances, vulnerabilites);
+                var character = new Character(stats, magic, race, spellMod, armorClass, maxHp, 0, professions, proficiencies, languages, immunities, resistances, vulnerabilites);
 
-                SaveCharacterSheet();
+                SaveCharacterSheet(character);
 
                 MessageBox.Show("Successfully created character sheet!");
             }
@@ -729,31 +722,28 @@ namespace DnDApplication
             }
         }
 
-        public Character GetCharacter()
+        private void SaveCharacterSheet(Character character)
         {
-            return newCharacter;
-        }
+            var characterSheetPath = Path.Combine(Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName, "./CharacterSheets");
 
-        private void SaveCharacterSheet()
-        {
-            
-            var characterSheetPath = Path.Combine(Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName, "./CharacterSheets"); ;
             if (!Directory.Exists(characterSheetPath))
             {
                 Directory.CreateDirectory(characterSheetPath);
-                MessageBox.Show("Made Folder Directory!" + characterSheetPath);
-            }
-            else
-            {
-                MessageBox.Show("Exists!");
             }
 
             if (NameTextBox.Text.Length != 0)
             {
                 if (NameTextBox.Text.All(char.IsLetterOrDigit))
                 {
+                    // Gets the path of the character sheet and 
                     var filePath = Path.Combine(characterSheetPath, NameTextBox.Text + ".txt");
-                    var jsonString = JsonSerializer.Serialize(newCharacter);
+
+                    //if (File.Exists(filePath)) {
+                        
+                    //}
+
+                    var options = new JsonSerializerOptions { WriteIndented = true };
+                    var jsonString = JsonSerializer.Serialize(character, options);
 
                     File.WriteAllText(filePath, jsonString);
                 }
@@ -773,32 +763,5 @@ namespace DnDApplication
             // Ensures all objects are loaded with default values selected
             ResetButton_Click(sender,e);
         }
-
-        //private void SaveCharacterSheet()
-        //{
-        //    //// Creates the character sheets directory
-        //    //if (!Directory.Exists("./CharacterSheets"))
-        //    //{
-        //    //    MessageBox.Show("Exists!");
-        //    //    //Directory.CreateDirectory("./CharacterSheets");
-        //    //} else
-        //    //{
-        //    //    MessageBox.Show("Doesn't!!!");
-        //    //}
-
-        //    string fileName = SaveCharacterDialog.FileName;
-        //    string jsonString = JsonSerializer.Serialize(newCharacter);
-
-        //    using (StreamWriter outputFile = new StreamWriter(fileName+".json"))
-        //    {
-        //        foreach ( string line in jsonString.Split("\n"))
-        //        {
-        //            outputFile.WriteLine(line);
-        //        }
-        //    }
-
-        //    MessageBox.Show("Sheet made!!!");
-        //}
     }
-
 }

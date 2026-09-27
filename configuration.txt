@@ -1,0 +1,1 @@
+default_character_sheet_path = "./CharacterSheets"
