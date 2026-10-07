@@ -98,6 +98,10 @@ namespace DnDApplication
         {
             BaseStatChanged(DexterityNumericBox, DexteritySaveNumericBox, DexterityModLabel, prevDex);
             prevDex = DexterityNumericBox.Value;
+
+            // Updates Initiative and AC values accordingly
+            ArmorClassNumericBox.Value = 10 + (int)Math.Floor((prevDex - 10) / 2);
+            InitiativeNumericBox.Value = (int)Math.Floor((prevDex - 10) / 2);
         }
         private void ConstitutionNumericBox_ValueChanged(object sender, EventArgs e)
         {
@@ -113,13 +117,15 @@ namespace DnDApplication
         {
             BaseStatChanged(WisdomNumericBox, WisdomSaveNumericBox, WisdomModLabel, prevWis);
             prevWis = WisdomNumericBox.Value;
+
+            // Updates the perception's value accordingly
+            PerceptionNumericBox.Value = 10 + (int)Math.Floor((prevWis - 10) / 2);
         }
         private void CharismaNumericBox_ValueChanged(object sender, EventArgs e)
         {
             BaseStatChanged(CharismaNumericBox, CharismaSaveNumericBox, CharismaModLabel, prevCha);
             prevCha = CharismaNumericBox.Value;
         }
-
         private void StrengthSaveNumericBox_ValueChanged(object sender, EventArgs e)
         {
             SavingThrowChanged(StrengthSaveNumericBox, StrengthSaveModLabel);
@@ -149,25 +155,21 @@ namespace DnDApplication
             SavingThrowChanged(CharismaSaveNumericBox, CharismaSaveModLabel);
 
         }
-
         private void UnlockPerceptionCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             PerceptionNumericBox.Enabled = !PerceptionNumericBox.Enabled;
             PerceptionNumericBox.ReadOnly = !PerceptionNumericBox.ReadOnly;
         }
-
         private void UnlockInitiativeCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             InitiativeNumericBox.Enabled = !InitiativeNumericBox.Enabled;
             InitiativeNumericBox.ReadOnly = !InitiativeNumericBox.ReadOnly;
         }
-
         private void UnlockACCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             ArmorClassNumericBox.Enabled = !ArmorClassNumericBox.Enabled;
             ArmorClassNumericBox.ReadOnly = !ArmorClassNumericBox.ReadOnly;
         }
-
         private void PrimaryMagicComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             // Checks if an artificial magic or that 'None' magic was picked
@@ -182,7 +184,6 @@ namespace DnDApplication
                 SecondaryMagicComboBox.Enabled = true;
             }
         }
-
         private void ClassComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
 
@@ -196,7 +197,6 @@ namespace DnDApplication
                 SpellModifier.Text = classModifier;
             }
         }
-
         private void VulnerabilitiesListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             int idx = VulnerabilitiesListBox.SelectedIndex;
@@ -204,7 +204,6 @@ namespace DnDApplication
             ResistancesListBox.SetItemChecked(idx, false);
             ImmunitiesListBox.SetItemChecked(idx, false);
         }
-
         private void ResistancesListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             int idx = ResistancesListBox.SelectedIndex;
@@ -212,7 +211,6 @@ namespace DnDApplication
             VulnerabilitiesListBox.SetItemChecked(idx, false);
             ImmunitiesListBox.SetItemChecked(idx, false);
         }
-
         private void ImmunitiesListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             int idx = ImmunitiesListBox.SelectedIndex;
